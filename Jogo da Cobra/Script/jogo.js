@@ -8,6 +8,7 @@ var xGabi = 5 * tamanhoBloco;
 var yGabi = 5 * tamanhoBloco;
 var xVelocidade = 0;
 var yVelocidade = 0;
+let direcaoInicial = 0;
 //corpo
 var corpoCobra = [];
 //comida
@@ -17,7 +18,7 @@ var ySushi;
 var xObstaculos = [];
 var yObstaculos = [];
 //Marca pontos
-var vidas= 5;
+var qtdVidas= 5;
 var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
@@ -26,6 +27,7 @@ var gameOver = false;
     var mostra = document.querySelector('.timer');
     
 window.onload = function (){
+    iniciaMovimento();
     iniciaContador(duracao, mostra);
     tela = document.getElementById("fundo-jogo");
     tela.width = linhas * tamanhoBloco;
@@ -33,12 +35,12 @@ window.onload = function (){
     ctx = tela.getContext('2d');
     colocarComida();
     document.addEventListener('keyup',mudaDirecao);
-    setInterval(update, 1000/15);
+    setInterval(update, 1000/17);
     colocarObstaculo();
-    
 }
 function update(){
-    console.log(vidas);
+
+    console.log(qtdVidas);
     if (gameOver){
         return;
     }
@@ -105,22 +107,22 @@ function update(){
         alert("Fim de jogo");
         }
     } 
-    if(vidas == 0 || comidasComidasTotal == 15){
+    if(qtdVidas == 0 || comidasComidasTotal == 15){
         gameOver = true;
         alert("Fim de jogo");
     }
     
 }
 function aumentaComidasComidas(){
-    if(comidasComidas < 3 && vidas < 5){
+    if(comidasComidas < 3 && qtdVidas < 5){
         comidasComidas += 1
-    }else if(comidasComidas == 3 && vidas < 5){
-        vidas +=1;
+    }else if(comidasComidas == 3 && qtdVidas < 5){
+        qtdVidas +=1;
         comidasComidas = 0;
     }
 }
 function perdeVida(){
-    vidas = vidas - 1
+    qtdVidas = qtdVidas - 1
 }
 function colocarComida(){
     xSushi = Math.floor(Math.random() * colunas) * tamanhoBloco;
@@ -173,3 +175,23 @@ function iniciaContador(duracao, mostra){
         }
     }, 1000);
 }
+function iniciaMovimento(){
+    
+    direcaoInicial = Math.floor(Math.random() * 4 + 1)
+    
+    console.log(direcaoInicial);
+
+    if(direcaoInicial == 1){
+        xVelocidade = 0 ;
+        yVelocidade = -1;
+    }if(direcaoInicial == 2){
+        xVelocidade = 0 ;
+        yVelocidade = 1;
+    }if(direcaoInicial == 3){
+        xVelocidade = -1 ;
+        yVelocidade = 0;  
+    }if(direcaoInicial == 4){
+        xVelocidade = 1 ;
+        yVelocidade = 0;
+    }
+} 
