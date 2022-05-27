@@ -26,14 +26,13 @@ var comidasComidasTotal = 0;
 var gameOver = false;
 var duracao = 60 * 1.49; //convertido para segundos
 var mostra = document.querySelector('.timer');
-    
+
+
+
 window.onload = function (){
     iniciaMovimento();
     iniciaContador(duracao, mostra);
-    tela = document.getElementById("fundo-jogo");
-    tela.width = linhas * tamanhoBloco;
-    tela.height = colunas * tamanhoBloco;
-    ctx = tela.getContext('2d');
+    canvas();
     colocarComida();
     document.addEventListener('keyup',mudaDirecao);
     setInterval(update, 1000/17);
@@ -45,68 +44,31 @@ function update(){
     if (gameOver){
         return;
     }
-    ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
-    ctx.fillRect(0, 0, tela.width,tela.height); // tela
-
-    ctx.fillStyle = 'aliceblue'; //sushi - branco
-    ctx.fillRect(xSushi, ySushi, tamanhoBloco , tamanhoBloco); //comida
-    
-    for (let i = 0; i <= xObstaculos.length; i++) {
-        ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
-        ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
-    }
-
+    geraCanvas();
+    geraObstaculos();
+    geraSushi();
     xVidas = 0;
     mostraVidas();
-    
-
-    if (xGabi == xSushi && yGabi == ySushi){ //Quando comer, add corpo,  muda posição da comida, aumenta contador vida 
-            corpoCobra.push([xSushi,ySushi]);
-            colocarComida();
-            aumentaComidasComidas();
-            comidasComidasTotal += 1
-  
-    }
-    for (let i = 0; i < yObstaculos.length; i++) {    
-    if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
-        perdeVida();
-        apagarObstaculo();
-    }
-    }  
-
-    for (let i = corpoCobra.length - 1 ; i > 0; i --) { //colisao com o corpo
-        corpoCobra [i] = corpoCobra[i-1];
-    }
-    if (corpoCobra.length){
-        corpoCobra[0] = [xGabi,yGabi]
-    }
-    ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
-    ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
-    xGabi += xVelocidade * tamanhoBloco;
-    yGabi += yVelocidade  * tamanhoBloco;
-
-    for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
-        ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
-    }
+    comerComida();
+    colisaoObstaculo();
+    colisaoCorpo();
+    geraCorpo();
+    aumentaCorpo();
     rolagemInfinita();
-    
-    //Condições para fim do jogo
-    
-    for (let i = 0; i < corpoCobra.length; i++) { // auto-colisao
-        if(xGabi == corpoCobra[i][0] && yGabi == corpoCobra[i][1]){ 
-        gameOver = true;
-        alert("Fim de jogo");
-        }
-    } 
-    if(qtdVidas == 0 || comidasComidasTotal == 15){
-        gameOver = true;
-        alert("Fim de jogo");
-    }
-    if(duracao == 0){
-        alert("Fim de jogo");    
-    }
-    console.log(ySushi);
+    condiçõesFimJogo();
 }
+function canvas(){
+    tela = document.getElementById("fundo-jogo");
+    tela.width = linhas * tamanhoBloco;
+    tela.height = colunas * tamanhoBloco;
+    ctx = tela.getContext('2d');
+}
+function geraCanvas(){
+    ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
+    ctx.fillRect(0, 0, tela.width,tela.height); // tela
+    
+}
+
 function aumentaComidasComidas(){
     if(comidasComidas < 3){
         comidasComidas += 1
@@ -115,6 +77,7 @@ function aumentaComidasComidas(){
         comidasComidas = 0;
     }
 }
+
 function perdeVida(){
     qtdVidas -= 1
 }
@@ -148,13 +111,6 @@ function mudaDirecao(event){
     }
 }
 
-
-
-function apagarObstaculo(){
-    xObstaculos.slice(0);   
-    yObstaculos.slice(0);
-}
-
 function iniciaContador(duracao, mostra){
     var timer = duracao, minutos, segundos;
     
@@ -168,9 +124,8 @@ function iniciaContador(duracao, mostra){
         mostra.textContent = minutos + ":" + segundos;
         
         if(--timer < 0){
-            gameOver = true;
+            fimDeJogo()
             timer = 0;
-            alert("Fim de jogo");
         }
         
     }, 1000);
@@ -179,8 +134,6 @@ function iniciaContador(duracao, mostra){
 function iniciaMovimento(){
     
     direcaoInicial = Math.floor(Math.random() * 4 + 1)
-    
-    console.log(direcaoInicial);
 
     if(direcaoInicial == 1){
         xVelocidade = 0 ;
@@ -217,4 +170,67 @@ function rolagemInfinita(){
     if (yGabi > tela.height - 1){
         yGabi = 25 ;
     } 
+}
+
+function geraSushi(){
+    ctx.fillStyle = 'aliceblue'; //sushi - branco
+    ctx.fillRect(xSushi, ySushi, tamanhoBloco , tamanhoBloco); //comida
+}
+function geraObstaculos(){
+    for (let i = 0; i <= xObstaculos.length; i++) {
+    ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
+    ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
+    }
+}
+function comerComida(){
+    if (xGabi == xSushi && yGabi == ySushi){ //Quando comer, add corpo,  muda posição da comida, aumenta contador vida 
+            corpoCobra.push([xSushi,ySushi]);
+            colocarComida();
+            aumentaComidasComidas();
+            comidasComidasTotal += 1
+    }
+}
+function colisaoObstaculo(){
+    for (let i = 0; i < yObstaculos.length; i++) {    
+        if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
+            perdeVida();
+            apagarObstaculo();
+        }
+    } 
+}
+function colisaoCorpo(){
+    for (let i = corpoCobra.length - 1 ; i > 0; i --) { //colisao com o corpo
+        corpoCobra [i] = corpoCobra[i-1];
+    }
+    if (corpoCobra.length){
+        corpoCobra[0] = [xGabi,yGabi]
+    }
+}
+function geraCorpo(){
+    ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
+    ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
+    xGabi += xVelocidade * tamanhoBloco;
+    yGabi += yVelocidade  * tamanhoBloco;
+    
+}
+function aumentaCorpo(){
+    for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
+        ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
+    }
+}
+function condiçõesFimJogo(){
+    //Condições para fim do jogo
+    for (let i = 0; i < corpoCobra.length; i++) { // auto-colisao
+        if(xGabi == corpoCobra[i][0] && yGabi == corpoCobra[i][1]){ 
+            fimDeJogo();
+        }
+    } 
+    if(qtdVidas == 0 || comidasComidasTotal == 15){ //Comidas igual a 15
+        fimDeJogo()
+    }
+}
+
+function fimDeJogo(){
+        gameOver = true;
+        alert("Fim de jogo");
 }
