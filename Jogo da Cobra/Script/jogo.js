@@ -19,6 +19,7 @@ var xObstaculos = [];
 var yObstaculos = [];
 //Marca pontos
 var qtdVidas= 5;
+
 var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
@@ -56,14 +57,10 @@ function update(){
         ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
         ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
     }
-    var x = 0;
-    for (let i = 1; i <= qtdVidas; i++) {
-         x+= 30;
-        ctx.fillStyle = 'rgb(160, 29, 29)';
-        ctx.fillRect(((tela.width /10) *7) + x, 5, 20, 20);
-        
-    }
-        
+
+    var xVidas = 0;
+    mostraVidas();
+    
 
     if (xGabi == xSushi && yGabi == ySushi){ //Quando comer, add corpo,  muda posição da comida, aumenta contador vida 
             corpoCobra.push([xSushi,ySushi]);
@@ -203,7 +200,12 @@ function iniciaMovimento(){
     }
 } 
 
-function criaPlacar(){
- 
-    
+function mostraVidas(){
+
+    for (let i = 1; i <= qtdVidas; i++) {  //Gera figuras de vida conforme QtdVidas 
+        xVidas += 30;
+        ctx.fillStyle = 'rgb(160, 29, 29)';
+        ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
+        
+    }
 }
