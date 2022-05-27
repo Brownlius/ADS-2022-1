@@ -6,8 +6,8 @@ var ctx;
 //cabeça
 var xGabi = 5 * tamanhoBloco; 
 var yGabi = 5 * tamanhoBloco;
-var xVelocidade = 0;
-var yVelocidade = 0;
+var xVelocidade;
+var yVelocidade;
 let direcaoInicial = 0;
 //corpo
 var corpoCobra = [];
