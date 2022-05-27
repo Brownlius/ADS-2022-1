@@ -24,7 +24,7 @@ var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
 var gameOver = false;
-var duracao = 60 * 0.1; //convertido para segundos
+var duracao = 60 * 1.49; //convertido para segundos
 var mostra = document.querySelector('.timer');
     
 window.onload = function (){
