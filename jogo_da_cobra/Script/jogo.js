@@ -28,9 +28,12 @@ var coracao;
 var gameOver = false;
 var duracao = 60 * 1.49; //convertido para segundos
 var mostra = document.querySelector('.timer');
+//coracao
+let imagemCoracao = document.getElementById('coracao');
+
 
 window.onload = function (){
-    
+
     iniciaMovimento();
     iniciaContador(duracao, mostra);
     canvas();
@@ -38,20 +41,20 @@ window.onload = function (){
     document.addEventListener('keyup',mudaDirecao);
     setInterval(update, 1000/15);
     colocarObstaculo();
-    
 }
 function update(){
 
     if (gameOver){
         return;
     }
+
     geraCanvas();
     geraObstaculos();
     geraSushi();
     xVidas = 0;
-    mostraVidas();
     xComidasComidas = 0;
-    mostraComidas()
+    mostraComidas();
+    mostraCoracao();
     comerComida();
     colisaoObstaculo();
     colisaoCorpo();
@@ -60,12 +63,16 @@ function update(){
     aumentaCorpo();
     rolagemInfinita();
     condiçõesFimJogo();
+    
 }
+
 function canvas(){
+
     tela = document.getElementById("fundo-jogo");
     tela.width = linhas * tamanhoBloco;
     tela.height = colunas * tamanhoBloco;
     ctx = tela.getContext('2d');
+    
 }
 function geraCanvas(){
     ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
@@ -151,40 +158,17 @@ function iniciaMovimento(){
     }
 } 
 
-function mostraVidas(){
-    var img = new Image();
-    img.src = "Imagens\coracao_snake.png";
-
-    img.addEventListener('load', function(){
-        // após baixar a imagem, podemos desenha-la no canvas
-        
-        ctx.drawImage(this);
-        ctx.drawImage(this, 30, 30);    
-        ctx.drawImage(this, 0, 0, 45, 75);
-        // onde this representa a imagem recém carregada
-    });
-    
-    for (let i = 1; i <= qtdVidas; i++) {  //Gera figuras de vida conforme QtdVidas 
-        //  xVidas += 30;
-        // ctx.fillStyle = 'rgb(160, 29, 29)';
-        // ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
-        img;
-    }
-}
-
-// function mostraCoracao(){
-//     var coracao = document.createElement("img");
-//     coracao.src = 'Jogo da Cobra\Imagens\coraçao-snake.png' 
-//     coracao.style.width = "30px";
-//     coracao.style.height = "30px";
-    
-
-// }
 function mostraComidas(){
     for (let i = 1; i <= comidasComidas; i++) {  //Gera figuras de vida conforme QtdVidas 
         xComidasComidas += 15;
         ctx.fillStyle = 'aliceblue';
         ctx.fillRect(((tela.width /10) * 6) + xComidasComidas, 5, 10, 10);
+    }
+}
+function mostraCoracao(){
+    for (let i = 1; i <= qtdVidas; i++) {
+        xVidas += 30; 
+        ctx.drawImage(imagemCoracao, ((tela.width / 10) * 7) + xVidas, 5, 20, 20);
     }
 }
 

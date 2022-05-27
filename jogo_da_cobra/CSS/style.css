@@ -17,6 +17,9 @@ body{
     text-align: center;
     background-color: rgb(26, 157, 245);
 }
+#coracao{
+    display: none;
+}
 .corpo{
     display: flex;
     justify-content: center;
