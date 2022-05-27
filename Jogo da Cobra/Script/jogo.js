@@ -23,8 +23,8 @@ var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
 var gameOver = false;
-    var duracao = 60 * 2.99; //convertido para segundos
-    var mostra = document.querySelector('.timer');
+var duracao = 60 * 2.99; //convertido para segundos
+var mostra = document.querySelector('.timer');
     
 window.onload = function (){
     iniciaMovimento();
@@ -37,6 +37,7 @@ window.onload = function (){
     document.addEventListener('keyup',mudaDirecao);
     setInterval(update, 1000/17);
     colocarObstaculo();
+    
 }
 function update(){
 
@@ -44,7 +45,7 @@ function update(){
     if (gameOver){
         return;
     }
-
+    
     ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
     ctx.fillRect(0, 0, tela.width,tela.height); // tela
 
@@ -53,10 +54,16 @@ function update(){
     
     for (let i = 0; i <= xObstaculos.length; i++) {
         ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
-        ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);
+        ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
+    }
+    var x = 0;
+    for (let i = 1; i <= qtdVidas; i++) {
+         x+= 30;
+        ctx.fillStyle = 'rgb(160, 29, 29)';
+        ctx.fillRect(((tela.width /10) *7) + x, 5, 20, 20);
         
     }
-    
+        
 
     if (xGabi == xSushi && yGabi == ySushi){ //Quando comer, add corpo,  muda posição da comida, aumenta contador vida 
             corpoCobra.push([xSushi,ySushi]);
@@ -195,3 +202,8 @@ function iniciaMovimento(){
         yVelocidade = 0;
     }
 } 
+
+function criaPlacar(){
+ 
+    
+}
