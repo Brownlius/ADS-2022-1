@@ -19,7 +19,7 @@ var xObstaculos = [];
 var yObstaculos = [];
 //Marca pontos
 var qtdVidas= 5;
-let xVidas;
+var xVidas;
 var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
@@ -42,7 +42,6 @@ window.onload = function (){
 }
 function update(){
 
-    // console.log(qtdVidas);
     if (gameOver){
         return;
     }
@@ -50,7 +49,7 @@ function update(){
     ctx.fillRect(0, 0, tela.width,tela.height); // tela
 
     ctx.fillStyle = 'aliceblue'; //sushi - branco
-    ctx.fillRect(xSushi, ySushi, (tamanhoBloco * 0.75), (tamanhoBloco * 0.75)); //comida
+    ctx.fillRect(xSushi, ySushi, tamanhoBloco , tamanhoBloco); //comida
     
     for (let i = 0; i <= xObstaculos.length; i++) {
         ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
@@ -89,19 +88,8 @@ function update(){
     for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
         ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
     }
-    //Rolagem infinita
-    if (xGabi < -1){
-        xGabi = tela.width - tamanhoBloco;
-    }
-    if (xGabi  > tela.width - 1 ){
-        xGabi = 0 ;
-    } 
-    if (yGabi < -1){
-        yGabi = tela.height - tamanhoBloco;
-    } 
-    if (yGabi > tela.height - 1){
-        yGabi = 0 ;
-    } 
+    rolagemInfinita();
+    
     //Condições para fim do jogo
     
     for (let i = 0; i < corpoCobra.length; i++) { // auto-colisao
@@ -117,23 +105,31 @@ function update(){
     if(duracao == 0){
         alert("Fim de jogo");    
     }
-    
+    console.log(ySushi);
 }
 function aumentaComidasComidas(){
-    if(comidasComidas < 3 && qtdVidas < 5){
+    if(comidasComidas < 3){
         comidasComidas += 1
     }else if(comidasComidas == 3 && qtdVidas < 5){
-        qtdVidas +=1;
+        qtdVidas += 1;
         comidasComidas = 0;
     }
 }
 function perdeVida(){
-    qtdVidas = qtdVidas - 1
+    qtdVidas -= 1
 }
 function colocarComida(){
     xSushi = Math.floor(Math.random() * colunas) * tamanhoBloco;
-    ySushi = Math.floor(Math.random() * linhas) * tamanhoBloco;
-    
+    ySushi = Math.floor(Math.random() * (linhas - 2) + 2) * tamanhoBloco;
+}
+
+
+function colocarObstaculo(){
+    for (let i = 0 ; i < 10 ; i++){
+    xObstaculos.push(Math.floor(Math.random() * colunas) * tamanhoBloco);
+    yObstaculos.push(Math.floor(Math.random() * (linhas - 2) + 2) * tamanhoBloco);
+    }
+    console.log(yObstaculos);
 }
 
 function mudaDirecao(event){
@@ -152,15 +148,10 @@ function mudaDirecao(event){
     }
 }
 
-function colocarObstaculo(){
-    for (let i = 0 ; i < 10 ; i++){
-    xObstaculos.push(Math.floor(Math.random() * colunas) * tamanhoBloco);
-    yObstaculos.push(Math.floor(Math.random() * colunas) * tamanhoBloco);
-    }
-}
+
 
 function apagarObstaculo(){
-    xObstaculos.slice(0);
+    xObstaculos.slice(0);   
     yObstaculos.slice(0);
 }
 
@@ -212,4 +203,18 @@ function mostraVidas(){
         ctx.fillStyle = 'rgb(160, 29, 29)';
         ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
     }
+}
+function rolagemInfinita(){
+    if (xGabi < -1){
+        xGabi = tela.width - tamanhoBloco;
+    }
+    if (xGabi  > tela.width - 1 ){
+        xGabi = 0 ;
+    } 
+    if (yGabi < 25){
+        yGabi = tela.height - tamanhoBloco;
+    } 
+    if (yGabi > tela.height - 1){
+        yGabi = 25 ;
+    } 
 }
