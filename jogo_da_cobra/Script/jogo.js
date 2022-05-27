@@ -1,6 +1,6 @@
-var tamanhoBloco = 20;
-var linhas = 30;
-var colunas = 30;
+var tamanhoBloco = 18;
+var linhas = 32;
+var colunas = 32;
 var tela;
 var ctx;
 //cabeça
@@ -22,20 +22,21 @@ var qtdVidas= 5;
 var xVidas;
 var comidasComidas = 0;
 var comidasComidasTotal = 0;
+var xComidasComidas;
+var coracao;
 //fim de jogo
 var gameOver = false;
 var duracao = 60 * 1.49; //convertido para segundos
 var mostra = document.querySelector('.timer');
 
-
-
 window.onload = function (){
+    
     iniciaMovimento();
     iniciaContador(duracao, mostra);
     canvas();
     colocarComida();
     document.addEventListener('keyup',mudaDirecao);
-    setInterval(update, 1000/17);
+    setInterval(update, 1000/15);
     colocarObstaculo();
     
 }
@@ -49,10 +50,13 @@ function update(){
     geraSushi();
     xVidas = 0;
     mostraVidas();
+    xComidasComidas = 0;
+    mostraComidas()
     comerComida();
     colisaoObstaculo();
     colisaoCorpo();
     geraCorpo();
+    movimentaGabi()
     aumentaCorpo();
     rolagemInfinita();
     condiçõesFimJogo();
@@ -66,7 +70,6 @@ function canvas(){
 function geraCanvas(){
     ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
     ctx.fillRect(0, 0, tela.width,tela.height); // tela
-    
 }
 
 function aumentaComidasComidas(){
@@ -86,13 +89,11 @@ function colocarComida(){
     ySushi = Math.floor(Math.random() * (linhas - 2) + 2) * tamanhoBloco;
 }
 
-
 function colocarObstaculo(){
     for (let i = 0 ; i < 10 ; i++){
     xObstaculos.push(Math.floor(Math.random() * colunas) * tamanhoBloco);
     yObstaculos.push(Math.floor(Math.random() * (linhas - 2) + 2) * tamanhoBloco);
     }
-    console.log(yObstaculos);
 }
 
 function mudaDirecao(event){
@@ -151,12 +152,42 @@ function iniciaMovimento(){
 } 
 
 function mostraVidas(){
+    var img = new Image();
+    img.src = "Imagens\coracao_snake.png";
+
+    img.addEventListener('load', function(){
+        // após baixar a imagem, podemos desenha-la no canvas
+        
+        ctx.drawImage(this);
+        ctx.drawImage(this, 30, 30);    
+        ctx.drawImage(this, 0, 0, 45, 75);
+        // onde this representa a imagem recém carregada
+    });
+    
     for (let i = 1; i <= qtdVidas; i++) {  //Gera figuras de vida conforme QtdVidas 
-        xVidas += 30;
-        ctx.fillStyle = 'rgb(160, 29, 29)';
-        ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
+        //  xVidas += 30;
+        // ctx.fillStyle = 'rgb(160, 29, 29)';
+        // ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
+        img;
     }
 }
+
+// function mostraCoracao(){
+//     var coracao = document.createElement("img");
+//     coracao.src = 'Jogo da Cobra\Imagens\coraçao-snake.png' 
+//     coracao.style.width = "30px";
+//     coracao.style.height = "30px";
+    
+
+// }
+function mostraComidas(){
+    for (let i = 1; i <= comidasComidas; i++) {  //Gera figuras de vida conforme QtdVidas 
+        xComidasComidas += 15;
+        ctx.fillStyle = 'aliceblue';
+        ctx.fillRect(((tela.width /10) * 6) + xComidasComidas, 5, 10, 10);
+    }
+}
+
 function rolagemInfinita(){
     if (xGabi < -1){
         xGabi = tela.width - tamanhoBloco;
@@ -190,11 +221,21 @@ function comerComida(){
             comidasComidasTotal += 1
     }
 }
+
+function aumentaComidasComidas(){
+    if(comidasComidas < 3){
+        comidasComidas += 1
+    }
+    if(comidasComidas == 3 && qtdVidas < 5){
+        qtdVidas += 1;
+        comidasComidas = 0;
+    }
+}
+
 function colisaoObstaculo(){
     for (let i = 0; i < yObstaculos.length; i++) {    
         if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
             perdeVida();
-            apagarObstaculo();
         }
     } 
 }
@@ -209,10 +250,13 @@ function colisaoCorpo(){
 function geraCorpo(){
     ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
     ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
-    xGabi += xVelocidade * tamanhoBloco;
-    yGabi += yVelocidade  * tamanhoBloco;
     
 }
+function movimentaGabi(){
+    xGabi += xVelocidade * tamanhoBloco;
+    yGabi += yVelocidade  * tamanhoBloco;
+}
+
 function aumentaCorpo(){
     for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
         ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
