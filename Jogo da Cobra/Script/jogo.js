@@ -19,12 +19,12 @@ var xObstaculos = [];
 var yObstaculos = [];
 //Marca pontos
 var qtdVidas= 5;
-
+let xVidas;
 var comidasComidas = 0;
 var comidasComidasTotal = 0;
 //fim de jogo
 var gameOver = false;
-var duracao = 60 * 2.99; //convertido para segundos
+var duracao = 60 * 0.1; //convertido para segundos
 var mostra = document.querySelector('.timer');
     
 window.onload = function (){
@@ -42,11 +42,10 @@ window.onload = function (){
 }
 function update(){
 
-    console.log(qtdVidas);
+    // console.log(qtdVidas);
     if (gameOver){
         return;
     }
-    
     ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
     ctx.fillRect(0, 0, tela.width,tela.height); // tela
 
@@ -58,7 +57,7 @@ function update(){
         ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
     }
 
-    var xVidas = 0;
+    xVidas = 0;
     mostraVidas();
     
 
@@ -103,7 +102,7 @@ function update(){
     if (yGabi > tela.height - 1){
         yGabi = 0 ;
     } 
-//Condições para fim do jogo
+    //Condições para fim do jogo
     
     for (let i = 0; i < corpoCobra.length; i++) { // auto-colisao
         if(xGabi == corpoCobra[i][0] && yGabi == corpoCobra[i][1]){ 
@@ -114,6 +113,9 @@ function update(){
     if(qtdVidas == 0 || comidasComidasTotal == 15){
         gameOver = true;
         alert("Fim de jogo");
+    }
+    if(duracao == 0){
+        alert("Fim de jogo");    
     }
     
 }
@@ -175,10 +177,14 @@ function iniciaContador(duracao, mostra){
         mostra.textContent = minutos + ":" + segundos;
         
         if(--timer < 0){
-            timer = duracao;
+            gameOver = true;
+            timer = 0;
+            alert("Fim de jogo");
         }
+        
     }, 1000);
 }
+
 function iniciaMovimento(){
     
     direcaoInicial = Math.floor(Math.random() * 4 + 1)
@@ -201,11 +207,9 @@ function iniciaMovimento(){
 } 
 
 function mostraVidas(){
-
     for (let i = 1; i <= qtdVidas; i++) {  //Gera figuras de vida conforme QtdVidas 
         xVidas += 30;
         ctx.fillStyle = 'rgb(160, 29, 29)';
         ctx.fillRect(((tela.width /10) * 7) + xVidas, 5, 20, 20);
-        
     }
 }
