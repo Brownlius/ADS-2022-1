@@ -10,7 +10,7 @@ var xVelocidade;
 var yVelocidade;
 let direcaoInicial = 0;
 //corpo
-var corpoCobra = [];
+var corpoCobra = [1];
 //comida
 var xSushi;
 var ySushi;
@@ -184,11 +184,11 @@ function rolagemInfinita(){
     if (xGabi  > tela.width - 1 ){
         xGabi = 0 ;
     } 
-    if (yGabi < 25){
+    if (yGabi < tamanhoBloco * 2){
         yGabi = tela.height - tamanhoBloco;
     } 
     if (yGabi > tela.height - 1){
-        yGabi = 25 ;
+        yGabi = tamanhoBloco * 2;
     } 
 }
 
