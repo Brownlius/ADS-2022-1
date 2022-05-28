@@ -17,7 +17,7 @@ body{
     text-align: center;
     background-color: rgb(26, 157, 245);
 }
-#coracao{
+#coracao, #obstaculos, #sushi{
     display: none;
 }
 .corpo{
@@ -43,5 +43,4 @@ canvas{
     border-radius: 5px;
     display: flex;
 }
-
 

@@ -28,9 +28,6 @@ var coracao;
 var gameOver = false;
 var duracao = 60 * 1.49; //convertido para segundos
 var mostra = document.querySelector('.timer');
-//coracao
-let imagemCoracao = document.getElementById('coracao');
-
 
 window.onload = function (){
 
@@ -50,6 +47,7 @@ function update(){
 
     geraCanvas();
     geraLinha();
+    geraCorpo();
     geraObstaculos();
     geraSushi();
     xVidas = 0;
@@ -57,10 +55,9 @@ function update(){
     mostraComidas();
     mostraCoracao();
     mostraPontos();
-    comerComida();
     colisaoObstaculo();
     colisaoCorpo();
-    geraCorpo();
+    colisaoComida();
     movimentaGabi()
     aumentaCorpo();
     rolagemInfinita();
@@ -87,7 +84,10 @@ function geraLinha(){
     ctx.lineTo(tela.width, (tamanhoBloco * 2) - 2);
     ctx.stroke();
 }
-
+function geraCorpo(){
+    ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
+    ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
+}
 function aumentaComidasComidas(){
     if(comidasComidas < 3){
         comidasComidas += 1
@@ -176,14 +176,16 @@ function mostraComidas(){
     }
 }
 function mostraCoracao(){
+    let imagemCoracao = document.getElementById('coracao');
     for (let i = 1; i <= qtdVidas; i++) {
         xVidas += 30; 
         ctx.drawImage(imagemCoracao, ((tela.width / 10) * 7) + xVidas, 5, 20, 20);
     }
 }
 function mostraPontos(){
-    ctx.font = '32px personalizada';
+    ctx.font = '32px personalizada'; 
     ctx.fillText(comidasComidasTotal, 5, 26);
+    
 }
 
 function rolagemInfinita(){
@@ -202,16 +204,16 @@ function rolagemInfinita(){
 }
 
 function geraSushi(){
-    ctx.fillStyle = 'aliceblue'; //sushi - branco
-    ctx.fillRect(xSushi, ySushi, tamanhoBloco , tamanhoBloco); //comida
+    let imgSushi = document.getElementById("sushi");
+    ctx.drawImage(imgSushi, xSushi, ySushi, tamanhoBloco , tamanhoBloco); //comida
 }
 function geraObstaculos(){
+    let imgObstaculo = document.getElementById('obstaculos');
     for (let i = 0; i <= xObstaculos.length; i++) {
-    ctx.fillStyle = 'rgb(138,118,138)'; // Gera o obstaculo
-    ctx.fillRect(xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
+    ctx.drawImage(imgObstaculo, xObstaculos[i], yObstaculos[i] , tamanhoBloco, tamanhoBloco);    
     }
 }
-function comerComida(){
+function colisaoComida(){
     if (xGabi == xSushi && yGabi == ySushi){ //Quando comer, add corpo,  muda posição da comida, aumenta contador vida 
             corpoCobra.push([xSushi,ySushi]);
             colocarComida();
@@ -228,15 +230,14 @@ function aumentaComidasComidas(){
         qtdVidas += 1;
         comidasComidas = 0;
     }
-
 }
 
 function colisaoObstaculo(){
     for (let i = 0; i < yObstaculos.length; i++) {    
         if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
-            perdeVida();
-            
-        }if(comidasComidas == 3 && qtdVidas == 4 ){
+            perdeVida();    
+        }
+        if(comidasComidas == 3 && qtdVidas == 4 ){
             aumentaComidasComidas();
         }
     } 
@@ -249,11 +250,7 @@ function colisaoCorpo(){
         corpoCobra[0] = [xGabi,yGabi]
     }
 }
-function geraCorpo(){
-    ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
-    ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
-    
-}
+
 function movimentaGabi(){
     xGabi += xVelocidade * tamanhoBloco;
     yGabi += yVelocidade  * tamanhoBloco;
@@ -261,6 +258,7 @@ function movimentaGabi(){
 
 function aumentaCorpo(){
     for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
+        ctx.fillStyle= 'rgb(24, 214, 119)'; 
         ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
     }
 }
