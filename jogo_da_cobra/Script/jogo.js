@@ -149,7 +149,7 @@ function iniciaContador(duracao, mostra){
         mostra.textContent = minutos + ":" + segundos;
         
         if(--timer < 0){
-            fimDeJogo()
+            perdeuJogo()
             timer = duracao;
         }
         
@@ -241,14 +241,20 @@ function aumentaComidasComidas(){
 
 function colisaoObstaculo(){
     for (let i = 0; i < yObstaculos.length; i++) {    
-        if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
+        if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ 
             perdeVida();    
+            yObstaculos.splice(i, 1);
+            xObstaculos.splice(i, 1);
+        
         }
         if(comidasComidas == 3 && qtdVidas == 4 ){
             aumentaComidasComidas();
         }
     } 
+    console.log(xObstaculos)
+    console.log(yObstaculos)
 }
+
 function colisaoCabeca(){
     for (let i = corpoCobra.length - 1 ; i > 0; i --) { //colisao com o corpo
         corpoCobra [i] = corpoCobra[i-1];
@@ -273,15 +279,19 @@ function condiçõesFimJogo(){
     //Condições para fim do jogo
     for (let i = 0; i < corpoCobra.length; i++) { // auto-colisao
         if(xGabi == corpoCobra[i][0] && yGabi == corpoCobra[i][1]){ 
-            fimDeJogo();
+            perdeuJogo();
         }
     } 
     if(qtdVidas == 0 || comidasComidasTotal == 15){ //Comidas igual a 15
-        fimDeJogo()
+        ganhouJogo();
     }
 }
 
-function fimDeJogo(){
+function perdeuJogo(){
         gameOver = true;
-        alert("Fim de jogo");
+        alert("Infelizmente você perdeu.");
+}
+function ganhouJogo(){
+    gameOver = true;
+    alert("Parabéns!Você ganhou!");
 }
