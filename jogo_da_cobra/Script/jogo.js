@@ -10,7 +10,7 @@ var xVelocidade;
 var yVelocidade;
 let direcaoInicial = 0;
 //corpo
-var corpoCobra = [1];
+var corpoCobra = [];
 //comida
 var xSushi;
 var ySushi;
@@ -35,6 +35,7 @@ window.onload = function (){
     iniciaContador(duracao, mostra);
     canvas();
     colocarComida();
+    
     document.addEventListener('keyup',mudaDirecao);
     setInterval(update, 1000/15);
     colocarObstaculo();
@@ -44,22 +45,21 @@ function update(){
     if (gameOver){
         return;
     }
-
-    geraCanvas();
-    geraLinha();
-    geraCorpo();
-    geraObstaculos();
-    geraSushi();
     xVidas = 0;
     xComidasComidas = 0;
+    geraCanvas();
+    geraLinha();
+    geraObstaculos();
+    geraCabeca();
+    aumentaCorpo();
+    mostraCoracao();    
+    geraSushi();
     mostraComidas();
-    mostraCoracao();
     mostraPontos();
     colisaoObstaculo();
-    colisaoCorpo();
+    colisaoCabeca();
     colisaoComida();
     movimentaGabi()
-    aumentaCorpo();
     rolagemInfinita();
     condiçõesFimJogo();
     
@@ -84,10 +84,12 @@ function geraLinha(){
     ctx.lineTo(tela.width, (tamanhoBloco * 2) - 2);
     ctx.stroke();
 }
-function geraCorpo(){
-    ctx.fillStyle= 'rgb(24, 214, 119)'; // verde - claro - cabeça
-    ctx.fillRect(xGabi,yGabi,tamanhoBloco,tamanhoBloco)
-}
+
+function geraCabeca(){
+    let cabeca =document.getElementById('gabi-cima');
+    ctx.drawImage(cabeca, xGabi,yGabi,tamanhoBloco,tamanhoBloco);
+}   
+
 function aumentaComidasComidas(){
     if(comidasComidas < 3){
         comidasComidas += 1
@@ -117,16 +119,21 @@ function mudaDirecao(event){
     if (event.code == "ArrowUp" && yVelocidade != 1){
         xVelocidade = 0 ;
         yVelocidade = -1;
+        
     }else if (event.code == "ArrowDown" && yVelocidade != -1){
         xVelocidade = 0;
         yVelocidade = 1;
+        
     }else if (event.code == "ArrowLeft" && xVelocidade != 1){
         xVelocidade = -1 ;
         yVelocidade = 0;
+        
     }else if (event.code == "ArrowRight" && xVelocidade != -1){
         xVelocidade = 1;
         yVelocidade = 0;
+        
     }
+    
 }
 
 function iniciaContador(duracao, mostra){
@@ -169,7 +176,7 @@ function iniciaMovimento(){
 } 
 
 function mostraComidas(){
-    for (let i = 1; i <= comidasComidas; i++) {  //Gera figuras de vida conforme QtdVidas 
+    for (let i = 1; i <= comidasComidas; i++) {  
         xComidasComidas += 15;
         ctx.fillStyle = 'aliceblue';
         ctx.fillRect(((tela.width /10) * 6) + xComidasComidas, 5, 10, 10);
@@ -183,9 +190,9 @@ function mostraCoracao(){
     }
 }
 function mostraPontos(){
-    ctx.font = '32px personalizada'; 
+    ctx.font = '32px personalizada';
+    ctx.fillStyle = 'aliceblue';
     ctx.fillText(comidasComidasTotal, 5, 26);
-    
 }
 
 function rolagemInfinita(){
@@ -242,7 +249,7 @@ function colisaoObstaculo(){
         }
     } 
 }
-function colisaoCorpo(){
+function colisaoCabeca(){
     for (let i = corpoCobra.length - 1 ; i > 0; i --) { //colisao com o corpo
         corpoCobra [i] = corpoCobra[i-1];
     }
@@ -257,9 +264,9 @@ function movimentaGabi(){
 }
 
 function aumentaCorpo(){
+    corpo = document.getElementById("corpo");
     for (let i = 0; i < corpoCobra.length; i++) { // aumentando corpo da cobra
-        ctx.fillStyle= 'rgb(24, 214, 119)'; 
-        ctx.fillRect(corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco)        
+        ctx.drawImage(corpo, corpoCobra[i][0] , corpoCobra[i][1]  , tamanhoBloco  , tamanhoBloco);    
     }
 }
 function condiçõesFimJogo(){

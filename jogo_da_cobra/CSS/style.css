@@ -17,7 +17,7 @@ body{
     text-align: center;
     background-color: rgb(26, 157, 245);
 }
-#coracao, #obstaculos, #sushi{
+#coracao, #obstaculos, #sushi,#gabi-cima, #gabi-baixo, #gabi-esquerda, #gabi-direita,#corpo{
     display: none;
 }
 .corpo{
