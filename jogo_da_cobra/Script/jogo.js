@@ -49,6 +49,7 @@ function update(){
     }
 
     geraCanvas();
+    geraLinha();
     geraObstaculos();
     geraSushi();
     xVidas = 0;
@@ -68,7 +69,6 @@ function update(){
 }
 
 function canvas(){
-
     tela = document.getElementById("fundo-jogo");
     tela.width = linhas * tamanhoBloco;
     tela.height = colunas * tamanhoBloco;
@@ -79,6 +79,14 @@ function geraCanvas(){
     ctx.fillStyle = 'rgb(20, 33, 44)'; // fundo - azul-escuro
     ctx.fillRect(0, 0, tela.width,tela.height); // tela
 }
+function geraLinha(){
+    ctx.strokeStyle = 'aliceblue';
+    ctx.lineWidth = 4;
+    ctx.beginPath();    
+    ctx.moveTo(0, (tamanhoBloco * 2) - 2 );
+    ctx.lineTo(tela.width, (tamanhoBloco * 2) - 2);
+    ctx.stroke();
+}
 
 function aumentaComidasComidas(){
     if(comidasComidas < 3){
@@ -87,6 +95,7 @@ function aumentaComidasComidas(){
         qtdVidas += 1;
         comidasComidas = 0;
     }
+    
 }
 
 function perdeVida(){
@@ -173,8 +182,8 @@ function mostraCoracao(){
     }
 }
 function mostraPontos(){
-    ctx.font = '24px serif';
-    ctx.fillText(comidasComidasTotal, 5, 20);
+    ctx.font = '32px personalizada';
+    ctx.fillText(comidasComidasTotal, 5, 26);
 }
 
 function rolagemInfinita(){
@@ -219,12 +228,16 @@ function aumentaComidasComidas(){
         qtdVidas += 1;
         comidasComidas = 0;
     }
+
 }
 
 function colisaoObstaculo(){
     for (let i = 0; i < yObstaculos.length; i++) {    
         if (xGabi == xObstaculos[i]  && yGabi  == yObstaculos[i]){ //Colisao com obstaculo. Atualiza local, e perde vida
             perdeVida();
+            
+        }if(comidasComidas == 3 && qtdVidas == 4 ){
+            aumentaComidasComidas();
         }
     } 
 }
