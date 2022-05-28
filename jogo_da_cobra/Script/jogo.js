@@ -55,6 +55,7 @@ function update(){
     xComidasComidas = 0;
     mostraComidas();
     mostraCoracao();
+    mostraPontos();
     comerComida();
     colisaoObstaculo();
     colisaoCorpo();
@@ -133,7 +134,7 @@ function iniciaContador(duracao, mostra){
         
         if(--timer < 0){
             fimDeJogo()
-            timer = 0;
+            timer = duracao;
         }
         
     }, 1000);
@@ -170,6 +171,10 @@ function mostraCoracao(){
         xVidas += 30; 
         ctx.drawImage(imagemCoracao, ((tela.width / 10) * 7) + xVidas, 5, 20, 20);
     }
+}
+function mostraPontos(){
+    ctx.font = '24px serif';
+    ctx.fillText(comidasComidasTotal, 5, 20);
 }
 
 function rolagemInfinita(){
